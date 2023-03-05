@@ -15,16 +15,12 @@ namespace SocialNetwork.BLL.Sevices
     {
         //Определяем переменную интерфейса
         IUserRepository userRepository;
-        MessageService messageService;
-        IFriendRepository friendRepository;
 
         //Конструктор юзер сервис
         public UserService()
         {
             //присваивание переменной
             userRepository = new UserRepository();
-            friendRepository = new FriendRepository();
-            messageService = new MessageService();
         }
 
         //Здесь будет добавлена регистрация и проверка на корректность введенных данных
@@ -83,14 +79,6 @@ namespace SocialNetwork.BLL.Sevices
             return ConstructUserModel(findUserEntity);
         }
 
-        public User FindById(int id)
-        {
-            var findUserEntity = userRepository.FindById(id);
-            if (findUserEntity is null) throw new UserNotFoundException();
-
-            return ConstructUserModel(findUserEntity);
-        }
-
         public void Update(User user)
         {
             var updatableUserEntity = new UserEntity()
@@ -109,33 +97,8 @@ namespace SocialNetwork.BLL.Sevices
                 throw new Exception();
         }
 
-        public IEnumerable<User> GetFriendsByUserId(int userId)
-        {
-            return friendRepository.FindAllByUserId(userId)
-                    .Select(friendsEntity => FindById(friendsEntity.friend_id));
-        }
-
-        public void AddFriend(UserAddingFriendData userAddingFriendData)
-        {
-            var findUserEntity = userRepository.FindByEmail(userAddingFriendData.FriendEmail);
-            if (findUserEntity is null) throw new UserNotFoundException();
-
-            var friendEntity = new FriendEntity()
-            {
-                user_id = userAddingFriendData.UserId,
-                friend_id = findUserEntity.id
-            };
-
-            if (this.friendRepository.Create(friendEntity) == 0)
-                throw new Exception();
-        }
-
         private User ConstructUserModel(UserEntity userEntity)
         {
-            var incomingMessages = messageService.GetIncomingMessagesByUserId(userEntity.id);
-            var outgoingMessages = messageService.GetOutcomingMessagesByUserId(userEntity.id);
-            var friends = GetFriendsByUserId(userEntity.id);
-
             return new User(userEntity.id,
                           userEntity.firstname,
                           userEntity.lastname,
@@ -143,10 +106,7 @@ namespace SocialNetwork.BLL.Sevices
                           userEntity.email,
                           userEntity.photo,
                           userEntity.favorite_movie,
-                          userEntity.favorite_book,
-                          incomingMessages,
-                          outgoingMessages,
-                          friends);
+                          userEntity.favorite_book);
         }
     }
 }

@@ -1,0 +1,42 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SocialNetwork.BLL.Models
+{
+    //Мы дадим возможность пользователю редактировать эти значения самостоятельно в любое время после регистрации.
+    //Но для начала нам необходимо добавить нашу бизнес-модель User в соответствующую папку BLL\Models.
+    public class User
+    {
+        public int Id { get; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Password { get; set; }
+        public string Email { get; set; }
+        public string Photo { get; set; }
+        public string FavoriteMovie { get; set; }
+        public string FavoriteBook { get; set; }
+
+        public User(
+            int id,
+            string firstName,
+            string lastName,
+            string password,
+            string email,
+            string photo,
+            string favoriteMovie,
+            string favoriteBook)
+        {
+            this.Id = id;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.Password = password;
+            this.Email = email;
+            this.Photo = photo;
+            this.FavoriteMovie = favoriteMovie;
+            this.FavoriteBook = favoriteBook;
+        }
+    }
+}
